@@ -1,0 +1,34 @@
+export ZOPEN_DEV_URL="https://github.com/cronie-crond/cronie.git"
+export ZOPEN_DEV_DEPS="curl git make m4 perl autoconf automake help2man texinfo xz zlib openssl expat gettext coreutils diffutils bash zoslib"
+export ZOPEN_BUILD_LINE="DEV"
+export ZOPEN_CATEGORIES="development"
+export ZOPEN_BOOTSTRAP="./autogen.sh"
+
+zopen_check_results()
+{
+  dir="$1"
+  pfx="$2"
+  chk="$1/$2_check.log"
+
+  # Echo the following information to gauge build health
+  echo "actualFailures:0"
+  echo "totalTests:1"
+  echo "expectedFailures:0"
+  echo "expectedTotalTests:1"
+}
+
+zopen_get_version()
+{
+  # Rather than hardcoding the version, obtain the version by running the tool
+  ./src/crontab -V |  awk -F" " '{print $2}'
+}
+
+zopen_post_install()
+{
+
+  mkdir -p $ZOPEN_INSTALL_DIR/var/spool/cron
+  mkdir -p $ZOPEN_INSTALL_DIR/var/run
+  
+  echo "_BPXK_AUTOCVT=\"ON\"" > $ZOPEN_INSTALL_DIR/var/spool/cron/$(whoami)
+ 
+}

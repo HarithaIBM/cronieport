@@ -1,0 +1,14 @@
+diff --git a/src/cronnext.c b/src/cronnext.c
+index 63db83b..63235a6 100644
+--- a/src/cronnext.c
++++ b/src/cronnext.c
+@@ -292,7 +292,9 @@ cron_db database(int installed, char **additional) {
+ 		}
+ 		memset(&pw, 0, sizeof(pw));
+ 		pw.pw_name = *additional;
++#ifndef __MVS__
+ 		pw.pw_passwd = "";
++#endif
+ 		pw.pw_dir = ".";
+ 		u = load_user(fd, &pw, *additional, *additional, *additional);
+ 		if (u == NULL) {

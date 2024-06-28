@@ -1,0 +1,57 @@
+diff --git a/src/pw_dup.c b/src/pw_dup.c
+index c6f7b00..a48cfb8 100644
+--- a/src/pw_dup.c
++++ b/src/pw_dup.c
+@@ -56,20 +56,24 @@ pw_dup(const struct passwd *pw) {
+ 		nsize = strlen(pw->pw_name) + 1;
+ 		total += nsize;
+ 	}
++#ifndef __MVS__
+ 	if (pw->pw_passwd) {
+ 		psize = strlen(pw->pw_passwd) + 1;
+ 		total += psize;
+ 	}
++#endif
+ #ifdef LOGIN_CAP
+ 	if (pw->pw_class) {
+ 		csize = strlen(pw->pw_class) + 1;
+ 		total += csize;
+ 	}
+ #endif /* LOGIN_CAP */
++#ifndef __MVS__
+ 	if (pw->pw_gecos) {
+ 		gsize = strlen(pw->pw_gecos) + 1;
+ 		total += gsize;
+ 	}
++#endif
+ 	if (pw->pw_dir) {
+ 		dsize = strlen(pw->pw_dir) + 1;
+ 		total += dsize;
+@@ -93,11 +97,13 @@ pw_dup(const struct passwd *pw) {
+ 		newpw->pw_name = cp;
+ 		cp += nsize;
+ 	}
++#ifndef __MVS__
+ 	if (pw->pw_passwd) {
+ 		(void)memcpy(cp, pw->pw_passwd, psize);
+ 		newpw->pw_passwd = cp;
+ 		cp += psize;
+ 	}
++#endif
+ #ifdef LOGIN_CAP
+ 	if (pw->pw_class) {
+ 		(void)memcpy(cp, pw->pw_class, csize);
+@@ -105,11 +111,13 @@ pw_dup(const struct passwd *pw) {
+ 		cp += csize;
+ 	}
+ #endif /* LOGIN_CAP */
++#ifndef __MVS__
+ 	if (pw->pw_gecos) {
+ 		(void)memcpy(cp, pw->pw_gecos, gsize);
+ 		newpw->pw_gecos = cp;
+ 		cp += gsize;
+ 	}
++#endif
+ 	if (pw->pw_dir) {
+ 		(void)memcpy(cp, pw->pw_dir, dsize);
+ 		newpw->pw_dir = cp;

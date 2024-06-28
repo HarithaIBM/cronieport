@@ -1,0 +1,30 @@
+diff --git a/src/popen.c b/src/popen.c
+index dadff0d..751f9b2 100644
+--- a/src/popen.c
++++ b/src/popen.c
+@@ -49,6 +49,7 @@
+ #endif
+ 
+ #include <signal.h>
++#include <limits.h>
+ 
+ /*
+  * Special version of popen which avoids call to shell.  This insures no one
+@@ -67,7 +68,7 @@ FILE *cron_popen(char *program, const char *type, struct passwd *pw, char **jobe
+ 	PID_T pid;
+ 	char *argv[MAX_ARGS];
+ 	ssize_t out;
+-	char buf[PIPE_BUF];
++	char buf[_POSIX_PIPE_BUF];
+ 	struct sigaction sa;
+ 	int fd;
+ 
+@@ -142,7 +143,7 @@ FILE *cron_popen(char *program, const char *type, struct passwd *pw, char **jobe
+ 
+ 			log_it("CRON", getpid(), "EXEC FAILED", program, save_errno);
+ 			if (*type != 'r') {
+-				while (0 != (out = read(STDIN, buf, PIPE_BUF))) {
++				while (0 != (out = read(STDIN, buf, _POSIX_PIPE_BUF))) {
+ 					if ((out == -1) && (errno != EINTR))
+ 						break;
+ 				}

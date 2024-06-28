@@ -1,0 +1,13 @@
+diff --git a/anacron/readtab.c b/anacron/readtab.c
+index acfd0cc..fad3d32 100644
+--- a/anacron/readtab.c
++++ b/anacron/readtab.c
+@@ -30,7 +30,7 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <obstack.h>
++#include "../obstack/obstack.h"
+ #include <limits.h>
+ #include <fnmatch.h>
+ #include <unistd.h>
