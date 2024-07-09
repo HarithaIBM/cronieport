@@ -1,0 +1,23 @@
+diff --git a/src/database.c b/src/database.c
+index bff0256..172d4a1 100644
+--- a/src/database.c
++++ b/src/database.c
+@@ -53,7 +53,9 @@
+ 
+ /* reasonable guess as to size of 1024 events */
+ #define BUF_LEN 	(1024 * (EVENT_SIZE + 16))
+-
++#ifdef __MVS__
++#define NAME_MAX _POSIX_PATH_MAX
++#endif
+ static void overwrite_database(cron_db *, cron_db *);
+ 
+ static void process_crontab(const char *, const char *,
+@@ -471,7 +473,6 @@ int load_database(cron_db * old_db) {
+ 	else {
+ 		max_mtime(SPOOL_DIR, &statbuf);
+ 	}
+-
+ 	if (stat(SYS_CROND_DIR, &crond_stat) < OK) {
+ 		log_it("CRON", pid, "STAT FAILED", SYS_CROND_DIR, errno);
+ 		crond_stat.st_mtime = 0;

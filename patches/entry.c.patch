@@ -1,0 +1,25 @@
+diff --git a/src/entry.c b/src/entry.c
+index 586eb9d..980ea04 100644
+--- a/src/entry.c
++++ b/src/entry.c
+@@ -308,7 +308,9 @@ entry *load_entry(FILE * file, void (*error_func) (), struct passwd *pw,
+ 			Debug(DPARS, ("load_entry()...unknown user entry\n"));
+ 			memset(&temppw, 0, sizeof (temppw));
+ 			temppw.pw_name = username;
+-			temppw.pw_passwd = "";
++#ifndef __MVS__
++               		temppw.pw_passwd = "";
++#endif
+ 			pw = &temppw;
+ 		} else {
+ 			Debug(DPARS, ("load_entry()...uid %ld, gid %ld\n",
+@@ -331,7 +333,9 @@ entry *load_entry(FILE * file, void (*error_func) (), struct passwd *pw,
+ 		ecode = e_memory;
+ 		goto eof;
+ 	}
++#ifndef __MVS__
+ 	memset(e->pwd->pw_passwd, 0, strlen(e->pwd->pw_passwd));
++#endif
+ 
+ 	p = env_get("RANDOM_DELAY", envp);
+ 	if (p) {
