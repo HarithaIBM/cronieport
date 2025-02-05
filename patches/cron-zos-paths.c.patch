@@ -1,0 +1,109 @@
+diff --git a/cron-zos-paths.c b/cron-zos-paths.c
+new file mode 100644
+index 0000000..86b2188
+--- /dev/null
++++ b/cron-zos-paths.c
+@@ -0,0 +1,103 @@
++#include <stdio.h>
++#include <string.h>
++
++#ifndef _CRON_ZOS_PATHS_H_
++#define _CRON_ZOS_PATHS_H_
++#include "cron-zos-paths.h"
++
++static const char* gnupg_get_install_dir(void)
++{
++    char* program_path= __getprogramdir();
++    if (program_path != NULL) {
++            char *last_slash = strrchr(program_path, '/');  // Find the last '/'
++            if (last_slash && strcmp(last_slash, "/bin") == 0) {
++            *last_slash = '\0';  // Truncate the string before '/bin'
++            }
++
++	    // Remove trailing slash if present (but keep root "/")
++        size_t len = strlen(program_path);
++        if (len > 1 && program_path[len - 1] == '/') {
++            program_path[len - 1] = '\0';
++        }
++            return program_path;  // Return the modified program path
++    }
++    else
++    {
++            return NULL;
++    }
++}
++
++static const char* append_path(const char* basedir, const char *subdir) {
++	if (!basedir || !subdir) {
++        return NULL; // Return NULL if input is invalid
++    }
++
++    // Allocate memory for the full path
++    size_t len = strlen(basedir) + strlen(subdir) + 2; // +1 for '/' and +1 for '\0'
++    char *full_path = malloc(len);
++    if (!full_path) {
++        return NULL; // Return NULL on allocation failure
++    }
++
++    // Construct the full path
++    snprintf(full_path, len, "%s/%s", basedir, subdir);
++    return full_path;
++}
++
++		/* SPOOLDIR is where the crontabs live.
++		 * This directory will have its modtime updated
++		 * whenever crontab(1) changes a crontab; this is
++		 * the signal for cron(8) to look at each individual
++		 * crontab file and reload those whose modtimes are
++		 * newer than they were last time around (or which
++		 * didn't exist last time around...)
++		 * or it will be checked by inotify
++		 */
++const char* SPOOL_DIR = NULL;
++const char* CRON_ALLOW = NULL;
++const char* CRON_DENY = NULL;
++const char* CRON_PID_DIR = NULL;
++const char* SYSCRONTAB  = NULL;
++const char* SYS_CROND_DIR = NULL;
++const char* SYSCONFDIR  = NULL;
++const char* PIDDIR = NULL;
++const char* PIDFILE = NULL;
++const char* REBOOT_LOCK = NULL;
++const char* _PATH_CRON_PID = NULL;
++
++
++// Initialize cron paths in a function
++void initialize_spool_dir(void) {
++    if (!SPOOL_DIR) {
++        SPOOL_DIR = append_path(gnupg_get_install_dir(), "/var/spool/cron");
++    }
++
++    if (!CRON_ALLOW) {
++        CRON_ALLOW = append_path(gnupg_get_install_dir(), "/etc/cron.allow");
++    }
++    if (!CRON_DENY) {
++        CRON_DENY = append_path(gnupg_get_install_dir(), "/etc/cron.deny");
++    }
++    if (!SYSCRONTAB) {
++        SYSCRONTAB = append_path(gnupg_get_install_dir(), "/etc/crontab");
++    }
++    if (!SYS_CROND_DIR) {
++        SYS_CROND_DIR = append_path(gnupg_get_install_dir(), "/etc/cron.d");
++    }
++    if (!SYSCONFDIR) {
++        SYSCONFDIR = append_path(gnupg_get_install_dir(), "/etc");
++    }
++    if(CRON_PID_DIR) {
++        PIDDIR = append_path(CRON_PID_DIR, "/");
++    }
++    else
++    {
++        PIDDIR = append_path(SYSCONFDIR, "/");
++    }
++#ifdef PIDFILE 
++	_PATH_CRON_PID = append_path(PIDDIR, PIDFILE);
++  	REBOOT_LOCK = append_path(PIDDIR, "cron.reboot");
++#endif
++}
++
++#endif /* _CRON_ZOS_PATHS_H_ */

@@ -3,7 +3,7 @@ export ZOPEN_DEV_DEPS="curl git make m4 perl autoconf automake help2man texinfo 
 export ZOPEN_BUILD_LINE="DEV"
 export ZOPEN_CATEGORIES="development"
 export ZOPEN_BOOTSTRAP="./autogen.sh"
-
+export ZOPEN_INSTALL="zopen_install"
 zopen_check_results()
 {
   dir="$1"
@@ -23,9 +23,11 @@ zopen_get_version()
   ./src/crontab -V |  awk -F" " '{print $2}'
 }
 
-zopen_post_install()
+zopen_install()
 {
+  make "$@"
 
+  mkdir -p $ZOPEN_INSTALL_DIR/etc
   mkdir -p $ZOPEN_INSTALL_DIR/var/spool/cron
   mkdir -p $ZOPEN_INSTALL_DIR/var/run
   

@@ -1,0 +1,14 @@
+diff --git a/src/cron.c b/src/cron.c
+index 5933656..70df2aa 100644
+--- a/src/cron.c
++++ b/src/cron.c
+@@ -209,6 +209,9 @@ int main(int argc, char *argv[]) {
+ 	struct timeval tv;
+ 	struct timezone tz;
+ 	char buf[256];
++#ifdef __MVS__
++        initialize_spool_dir();
++#endif
+ 
+ 	if ((ProgramName=strrchr(argv[0], '/')) == NULL) {
+ 		ProgramName = argv[0];

@@ -1,0 +1,23 @@
+diff --git a/src/crontab.c b/src/crontab.c
+index c11dc81..9288ba8 100644
+--- a/src/crontab.c
++++ b/src/crontab.c
+@@ -150,7 +150,9 @@ static void usage(const char *msg) {
+ 
+ int main(int argc, char *argv[]) {
+ 	int exitstatus;
+-
++#ifdef __MVS__
++        initialize_spool_dir();
++#endif
+ 	if ((ProgramName = strrchr(argv[0], '/')) == NULL) {
+ 		ProgramName = argv[0];
+ 	}
+@@ -676,7 +678,6 @@ static void edit_cmd(void) {
+ 	struct utimbuf utimebuf;
+ 	WAIT_T waiter;
+ 	PID_T pid, xpid;
+-
+ 	log_it(RealUser, Pid, "BEGIN EDIT", User, 0);
+ 	if (!glue_strings(n, sizeof n, SPOOL_DIR, User, '/')) {
+ 		fprintf(stderr, "path too long\n");

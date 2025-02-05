@@ -1,8 +1,20 @@
 diff --git a/src/cronnext.c b/src/cronnext.c
-index 63db83b..63235a6 100644
+index 63db83b..8f8a02c 100644
 --- a/src/cronnext.c
 +++ b/src/cronnext.c
-@@ -292,7 +292,9 @@ cron_db database(int installed, char **additional) {
+@@ -32,7 +32,11 @@
+ 
+ #include "globals.h"
+ #include "funcs.h"
++#ifdef __MVS__
++#include "cron-zos-paths.h"
++#else
+ #include "cron-paths.h"
++#endif
+ 
+ /* flags to crontab search */
+ #define ENTRIES  0x01			// print entries
+@@ -292,7 +296,9 @@ cron_db database(int installed, char **additional) {
  		}
  		memset(&pw, 0, sizeof(pw));
  		pw.pw_name = *additional;
@@ -12,3 +24,14 @@ index 63db83b..63235a6 100644
  		pw.pw_dir = ".";
  		u = load_user(fd, &pw, *additional, *additional, *additional);
  		if (u == NULL) {
+@@ -344,7 +350,9 @@ int main(int argn, char *argv[]) {
+ 	endtime = 0;
+ 	printjobs = 0;
+ 	start = (time(NULL) + 59) / 60 * 60;
+-
++#ifdef __MVS__
++        initialize_spool_dir();
++#endif
+ 	while (-1 != (opt = getopt(argn, argv, "i:e:ast:q:j:lcfhV"))) {
+ 		switch (opt) {
+ 		case 'i':

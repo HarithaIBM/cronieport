@@ -1,0 +1,59 @@
+diff --git a/cron-zos-paths.h b/cron-zos-paths.h
+new file mode 100644
+index 0000000..fcab19e
+--- /dev/null
++++ b/cron-zos-paths.h
+@@ -0,0 +1,53 @@
++
++#ifndef _CRON_ZOS_PATHS_H_
++#define _CRON_ZOS_PATHS_H_
++
++#undef SPOOL_DIR
++extern const char* SPOOL_DIR; 
++
++		/* CRON_HOSTNAME is file in SPOOL_DIR which, if it
++		 * exists, and does not just contain a line matching
++		 * the name returned by gethostname(), causes all
++		 * crontabs in SPOOL_DIR to be ignored.  This is
++		 * intended to be used when clustering hosts sharing
++		 * one NFS-mounted SPOOL_DIR, and where only one host
++		 * should use the crontab files here at any one time.
++		 */
++#define CRON_HOSTNAME	".cron.hostname"
++#define PIDFILE         "crond.pid"
++
++		/* cron allow/deny file.  At least cron.deny must
++		 * exist for ordinary users to run crontab.
++		 */
++#undef CRON_ALLOW
++#undef CRON_DENY
++extern const char* CRON_ALLOW; 
++extern const char* CRON_DENY; 
++
++		/* directory of cron pid file */
++#undef CRON_PID_DIR
++extern const char* CRON_PID_DIR; 
++
++		/* 4.3BSD-style crontab f.e. /etc/crontab */
++#undef SYSCRONTAB
++extern const char* SYSCRONTAB;
++
++		/* system crontab dir f.e. /etc/cron.d/ */
++#undef SYS_CROND_DIR
++extern const char* SYS_CROND_DIR; 
++
++#undef SYSCONFDIR
++extern const char* SYSCONFDIR;
++
++#undef PIDDIR
++extern const char* PIDDIR;
++
++#undef PIDFILE
++extern const char* PIDFILE;
++
++#undef REBOOT_LOCK
++extern const char* REBOOT_LOCK;
++
++#undef _PATH_CRON_PID
++extern const char* _PATH_CRON_PID;
++#endif /* _CRON_ZOS_PATHS_H_ */
